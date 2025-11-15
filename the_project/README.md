@@ -1,8 +1,6 @@
 ## Todo app
 
-Deploy with `kubectl apply -f todo-app/manifests/deployment.yaml`
+Deploy with `kubectl apply -f todo-app/manifests`
 
-Set service with `kubectl apply -f todo-app/manifests/service.yaml`
-
-Now navigate to `http://localhost:<published_port>`
+Now visit `http://localhost:<published_port>/greeting`
 
