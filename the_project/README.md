@@ -2,6 +2,7 @@
 
 Deploy with `kubectl apply -f todo-app/manifests/deployment.yaml`
 
-Set forward port with `kubectl port-forward todo-app-dep... 3003:3000`
+Set service with `kubectl apply -f todo-app/manifests/service.yaml`
 
-Now navigate to `http://localhost:3003`
+Now navigate to `http://localhost:<published_port>`
+
