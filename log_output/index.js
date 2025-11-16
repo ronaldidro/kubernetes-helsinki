@@ -1,22 +1,20 @@
 import http from 'node:http';
+import fs from 'node:fs';
 
-const randomId = crypto.randomUUID();
-let currentTimestamp = new Date().toISOString();
-
-setInterval(() => {
-  currentTimestamp = new Date().toISOString();
-  console.log(`${currentTimestamp}: ${randomId}`);
-}, 5000);
-
+const file = '/usr/src/app/data/log.txt';
 
 const server = http.createServer((req, res) => {
-  if (req.url === '/status') {
-    const response = {
-      timestamp: currentTimestamp,
-      randomId: randomId
-    };
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(response));
+  if (req.url === '/') {
+    let content = "";
+
+    try {
+      content = fs.readFileSync(file, 'utf8');
+    } catch (err) {
+      content = "No data written yet";
+    }
+
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end(content);
   } else {
     res.writeHead(404);
     res.end("Not found");

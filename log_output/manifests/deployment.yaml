@@ -12,6 +12,17 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: shared-log
+          emptyDir: {}
       containers:
-        - name: log-output
+        - name: log-writer
+          image: ronaldidro/log-writer
+          volumeMounts:
+            - name: shared-log
+              mountPath: /usr/src/app/data
+        - name: log-reader
           image: ronaldidro/log-output
+          volumeMounts:
+            - name: shared-log
+              mountPath: /usr/src/app/data

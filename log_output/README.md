@@ -2,7 +2,7 @@
 
 Deploy with `kubectl apply -f manifests`
 
-Now visit `http://localhost:<published_port>/status`
+Now visit `http://localhost:<published_port>`
 
 
 
