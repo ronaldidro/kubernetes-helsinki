@@ -4,9 +4,11 @@ const path = require("path");
 const app = express();
 
 const port = process.env.PORT || 3000;
-const folder = "/usr/src/app/files";
+//const folder = "/usr/src/app/files";
+const folder = path.resolve("./files");
 const imagePath = path.join(folder, "image.jpg");
 const timestampPath = path.join(folder, "timestamp.txt");
+const todos = ["Learn JavaScript", "Learn React", "Build a project"];
 
 async function downloadImage() {
   console.log("Download image...");
@@ -48,7 +50,13 @@ app.get("/", async (req, res) => {
       <head><title>The project App</title></head>
       <body>
         <h1>The project App</h1>
-        <img src="/image" style="width: 300px; height: 300px;" />
+        <img src="/image" style="width: 300px; height: 300px; margin-bottom: 10px" />
+     	<br>
+        <input id="todo" type="text" maxlength="140">
+        <button>Create todo</button>
+	<ul>
+	  ${todos.map(todo => `<li>${todo}</li>`).join("")}
+	</ul>
         <footer style="margin-top: 20px;">
           <small>DevOps with Kubernetes 2025</small>
         </footer>
