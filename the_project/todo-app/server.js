@@ -4,8 +4,7 @@ const path = require("path");
 const app = express();
 
 const port = process.env.PORT || 3000;
-//const folder = "/usr/src/app/files";
-const folder = path.resolve("./files");
+const folder = "/usr/src/app/files";
 const imagePath = path.join(folder, "image.jpg");
 const timestampPath = path.join(folder, "timestamp.txt");
 const todos = ["Learn JavaScript", "Learn React", "Build a project"];
