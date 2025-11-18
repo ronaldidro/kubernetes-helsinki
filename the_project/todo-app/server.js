@@ -1,71 +1,48 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const app = express();
+import express from "express";
+import path from "path";
+import { createTodo, getTodos } from "./lib/client.js";
+import { ensureImage } from "./lib/utils.js";
 
+const app = express();
 const port = process.env.PORT || 3000;
 const folder = "/usr/src/app/files";
 const imagePath = path.join(folder, "image.jpg");
 const timestampPath = path.join(folder, "timestamp.txt");
-const todos = ["Learn JavaScript", "Learn React", "Build a project"];
 
-async function downloadImage() {
-  console.log("Download image...");
+app.use(express.urlencoded({ extended: true }));
 
-  const response = await fetch("https://picsum.photos/1200");
-  const arrayBuffer = await response.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
-  fs.writeFileSync(imagePath, buffer);
-  fs.writeFileSync(timestampPath, Date.now().toString());
-}
-
-async function ensureImage() {
-  const imageExists = fs.existsSync(imagePath);
-  const tsExists = fs.existsSync(timestampPath);
-
-  if (!imageExists || !tsExists) {
-    await downloadImage();
-    return;
-  }
-
-  const timestamp = Number(fs.readFileSync(timestampPath, "utf8"));
-  const now = Date.now();
-  const diffMs = now - timestamp;
-
-  const tenMin = 10 * 60 * 1000;
-
-  if (diffMs >= tenMin) {
-    console.log("Time finished");
-    await downloadImage();
-  }
-}
+app.set("view engine", "ejs");
+app.set("views", path.join(process.cwd(), "views"));
 
 app.get("/", async (req, res) => {
-  await ensureImage();
+  await ensureImage(imagePath, timestampPath);
 
-  res.send(`
-    <html>
-      <head><title>The project App</title></head>
-      <body>
-        <h1>The project App</h1>
-        <img src="/image" style="width: 300px; height: 300px; margin-bottom: 10px" />
-     	<br>
-        <input id="todo" type="text" maxlength="140">
-        <button>Create todo</button>
-	<ul>
-	  ${todos.map(todo => `<li>${todo}</li>`).join("")}
-	</ul>
-        <footer style="margin-top: 20px;">
-          <small>DevOps with Kubernetes 2025</small>
-        </footer>
-      </body>
-    </html>
-  `);
+  let todos = [];
+  try {
+    todos = await getTodos();
+  } catch (err) {
+    console.error("Error fetching todos:", err);
+  }
+
+  res.render("index", { todos });
 });
 
 app.get("/image", (req, res) => {
   res.sendFile(imagePath);
+});
+
+app.post("/todos", async (req, res) => {
+  const description = req.body.description?.trim();
+
+  if (description) {
+    try {
+      await createTodo(description);
+    } catch (err) {
+      console.error("Error creating todo:", err);
+    }
+  }
+
+  res.redirect("/");
 });
 
 app.listen(port, () => {
