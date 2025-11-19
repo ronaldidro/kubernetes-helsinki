@@ -1,7 +1,8 @@
-import http from 'node:http';
-import fs from 'node:fs';
+import fs from "node:fs";
+import http from "node:http";
 
-const file = '/usr/src/app/data/log.txt';
+const logFile = "/usr/src/app/data/log.txt";
+const infoFile = "/usr/src/app/config/info.txt";
 
 async function getPings() {
   try {
@@ -18,17 +19,29 @@ async function getPings() {
 }
 
 const server = http.createServer(async (req, res) => {
-  if (req.url === '/') {
-    let content = "";
+  if (req.url === "/") {
+    let logText = "";
+    let infoText = "";
 
     try {
-      content = fs.readFileSync(file, 'utf8');
-    } catch (err) {
-      content = "No data written yet";
+      logText = fs.readFileSync(logFile, "utf8").trim();
+    } catch {
+      logText = "log.txt not found";
+    }
+
+    try {
+      infoText = fs.readFileSync(infoFile, "utf8").trim();
+    } catch {
+      infoText = "info.txt not found";
     }
 
     const pings = await getPings();
-    const result = `${content}\nPing / pongs: ${pings}\n`;
+
+    const info = `file content: ${infoText}`;
+    const variable = `env variable: MESSAGE=${process.env.MESSAGE}`;
+    const counter = `Ping / pongs: ${pings}`;
+
+    const result = `${info}\n${variable}\n${logText}\n${counter}`;
 
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end(result);

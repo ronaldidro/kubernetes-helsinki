@@ -17,6 +17,9 @@ spec:
         - name: shared-log
           persistentVolumeClaim:
             claimName: log-claim
+        - name: config-vol
+          configMap:
+            name: log-output-config
       containers:
         - name: log-writer
           image: ronaldidro/log-writer
@@ -25,6 +28,14 @@ spec:
               mountPath: /usr/src/app/data
         - name: log-reader
           image: ronaldidro/log-output
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-config
+                  key: MESSAGE
           volumeMounts:
             - name: shared-log
               mountPath: /usr/src/app/data
+            - name: config-vol
+              mountPath: /usr/src/app/config
