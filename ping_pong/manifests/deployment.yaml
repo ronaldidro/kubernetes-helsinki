@@ -16,3 +16,6 @@ spec:
       containers:
         - name: ping-pong
           image: ronaldidro/ping-pong
+          env:
+            - name: PG_HOST
+              value: "postgres-stset-0.postgres-svc"
