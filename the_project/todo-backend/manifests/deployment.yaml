@@ -16,3 +16,9 @@ spec:
       containers:
         - name: todo-backend
           image: ronaldidro/todo-backend
+          env:
+            - name: BACKEND_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: BACKEND_PORT

@@ -4,7 +4,7 @@ import { createTodo, getTodos } from "./lib/client.js";
 import { ensureImage } from "./lib/utils.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT;
 const folder = "/usr/src/app/files";
 const imagePath = path.join(folder, "image.jpg");
 const timestampPath = path.join(folder, "timestamp.txt");

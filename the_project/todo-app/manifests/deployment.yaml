@@ -20,6 +20,22 @@ spec:
       containers:
         - name: todo-app
           image: ronaldidro/todo-app
+          env:
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: APP_PORT
+            - name: PICSUM_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: PICSUM_URL
+            - name: BACKEND_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: BACKEND_SERVICE_URL
           volumeMounts:
             - name: todo-volume
               mountPath: /usr/src/app/files

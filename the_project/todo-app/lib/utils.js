@@ -3,7 +3,7 @@ import fs from "fs/promises";
 async function downloadImage(imagePath, timestampPath) {
   console.log("Downloading image...");
 
-  const response = await fetch("https://picsum.photos/1200");
+  const response = await fetch(`${process.env.PICSUM_URL}/1200`);
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 

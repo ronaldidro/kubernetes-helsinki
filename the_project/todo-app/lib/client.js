@@ -1,4 +1,4 @@
-const TODO_SERVICE_URL = "http://todo-backend-svc:2560/todos";
+const TODO_SERVICE_URL = `${process.env.BACKEND_SERVICE_URL}/todos`;
 
 export async function getTodos() {
   const response = await fetch(TODO_SERVICE_URL);

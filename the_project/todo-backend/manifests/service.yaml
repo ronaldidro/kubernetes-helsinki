@@ -10,4 +10,4 @@ spec:
   ports:
     - port: 2560
       protocol: TCP
-      targetPort: 3000
+      targetPort: 3001
