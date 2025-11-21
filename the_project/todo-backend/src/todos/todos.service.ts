@@ -1,41 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './entities/todo.entity';
 
 @Injectable()
 export class TodosService {
-  private todos: Todo[] = [];
+  constructor(
+    @InjectRepository(Todo)
+    private readonly repository: Repository<Todo>,
+  ) {}
 
-  create(createTodoDto: CreateTodoDto): Todo {
-    const todo = new Todo(createTodoDto.description);
-    this.todos.push(todo);
-    return todo;
+  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
+    const todo = this.repository.create({
+      description: createTodoDto.description,
+    });
+    return this.repository.save(todo);
   }
 
-  findAll(): Todo[] {
-    return this.todos;
+  findAll(): Promise<Todo[]> {
+    return this.repository.find();
   }
 
-  findOne(id: string): Todo | undefined {
-    return this.todos.find((todo) => todo.id === id);
+  findOne(id: string): Promise<Todo | null> {
+    return this.repository.findOneBy({ id });
   }
 
-  update(id: string, updateTodoDto: UpdateTodoDto): Todo | undefined {
-    const todo = this.findOne(id);
-    if (todo && updateTodoDto.description) {
+  async update(id: string, updateTodoDto: UpdateTodoDto): Promise<Todo | null> {
+    const todo = await this.findOne(id);
+
+    if (!todo) return null;
+
+    if (updateTodoDto.description) {
       todo.description = updateTodoDto.description;
-      todo.updatedAt = new Date();
     }
-    return todo;
+
+    return this.repository.save(todo);
   }
 
-  remove(id: string): boolean {
-    const index = this.todos.findIndex((todo) => todo.id === id);
-    if (index > -1) {
-      this.todos.splice(index, 1);
-      return true;
-    }
-    return false;
+  async remove(id: string): Promise<boolean> {
+    const result = await this.repository.delete(id);
+    return result.affected ? result.affected > 0 : false;
   }
 }

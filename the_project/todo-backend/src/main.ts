@@ -1,10 +1,14 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { createDatabaseIfNotExists } from './config/db.config';
 
 async function bootstrap() {
+  await createDatabaseIfNotExists();
+
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Main');
+  const port = process.env.BACKEND_PORT!;
 
   app.enableCors();
 
@@ -16,8 +20,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.BACKEND_PORT!);
+  await app.listen(port);
 
-  logger.log(`Service running on port ${process.env.BACKEND_PORT}`);
+  logger.log(`Service running on port ${port}`);
 }
 bootstrap();

@@ -8,3 +8,6 @@ data:
   PICSUM_URL: "https://picsum.photos"
   BACKEND_PORT: "3001"
   BACKEND_SERVICE_URL: "http://todo-backend-svc:2560"
+  PG_HOST: "postgres-stset-0.postgres-svc"
+  PG_USER: "postgres"
+  PG_PASSWORD: "postgres"

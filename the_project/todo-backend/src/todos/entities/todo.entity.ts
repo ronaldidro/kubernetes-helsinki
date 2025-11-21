@@ -1,13 +1,22 @@
-export class Todo {
-  id: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-  constructor(description: string) {
-    this.id = Date.now().toString();
-    this.description = description;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  }
+@Entity()
+export class Todo {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  description: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

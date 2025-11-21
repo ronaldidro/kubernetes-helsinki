@@ -22,3 +22,18 @@ spec:
                 configMapKeyRef:
                   name: todo-config
                   key: BACKEND_PORT
+            - name: PG_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: PG_HOST
+            - name: PG_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: PG_USER
+            - name: PG_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-config
+                  key: PG_PASSWORD
