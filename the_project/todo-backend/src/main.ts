@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { createDatabaseIfNotExists } from './config/db.config';
@@ -17,6 +17,13 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      exceptionFactory: (errors) => {
+        const messages = errors.flatMap((e) =>
+          Object.values(e.constraints || {}),
+        );
+        logger.warn(`Validation error: ${JSON.stringify(messages)}`);
+        return new BadRequestException(messages);
+      },
     }),
   );
 
