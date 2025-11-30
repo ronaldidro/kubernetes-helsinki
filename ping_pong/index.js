@@ -35,7 +35,7 @@ router.get("/", (ctx) => {
   ctx.body = "ok";
 });
 
-router.get("/pingpong", async (ctx) => {
+router.get("/ping", async (ctx) => {
   await pool.query("UPDATE pings SET value = value + 1 WHERE id = 1");
   const res = await pool.query("SELECT value FROM pings WHERE id = 1");
   ctx.body = `pong ${res.rows[0].value}`;
