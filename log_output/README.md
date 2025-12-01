@@ -8,6 +8,6 @@ Deploy with `kubectl apply -f manifests`
 
 Deploy the ping-pong app too
 
-See IP address whit `kubectl get gateway app-gateway -n exercises --watch`
+See IP address whit `kubectl get gateway exercises-gateway -n exercises --watch`
 
 Now visit `http://<ip-address>`

@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  namespace: exercises
-  name: exercises-gateway
+  namespace: project
+  name: project-gateway
 spec:
   gatewayClassName: gke-l7-global-external-managed
   listeners:

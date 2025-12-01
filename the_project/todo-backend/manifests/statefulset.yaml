@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:14
+          image: PROJECT/DB
           ports:
             - name: db
               containerPort: 5432
@@ -26,12 +26,12 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
         accessModes: ['ReadWriteOnce']
-        storageClassName: local-path
         resources:
           requests:
             storage: 1Gi

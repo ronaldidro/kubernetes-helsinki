@@ -19,7 +19,7 @@ spec:
             claimName: todo-claim
       containers:
         - name: todo-app
-          image: ronaldidro/todo-app
+          image: PROJECT/APP
           env:
             - name: APP_PORT
               valueFrom:

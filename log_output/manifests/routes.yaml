@@ -2,10 +2,10 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
   namespace: exercises
-  name: app-routes
+  name: exercises-routes
 spec:
   parentRefs:
-    - name: app-gateway
+    - name: exercises-gateway
   rules:
     - matches:
         - path:

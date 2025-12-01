@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
             - name: todo-cronjob
-              image: ronaldidro/todo-generator
+              image: PROJECT/CRONJOB
               env:
                 - name: BACKEND_SERVICE_URL
                   valueFrom:

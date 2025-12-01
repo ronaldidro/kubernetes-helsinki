@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: todo-backend
-          image: ronaldidro/todo-backend
+          image: PROJECT/BACKEND
           env:
             - name: BACKEND_PORT
               valueFrom:
