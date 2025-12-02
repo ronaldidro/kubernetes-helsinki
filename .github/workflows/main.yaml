@@ -63,10 +63,24 @@ jobs:
       - name: Deploy with Kustomize
         run: |
           cd the_project
+
+          NAMESPACE="${GITHUB_REF#refs/heads/}"
+
+          if [ "$BRANCH" = "main" ]; then
+            NAMESPACE="project"
+          fi
+
+          kubectl create namespace $NAMESPACE || true
+          kubectl config set-context --current --namespace=$NAMESPACE
+
+          kustomize edit set namespace $NAMESPACE
           kustomize edit set image PROJECT/APP=$APP_IMAGE_TAG
           kustomize edit set image PROJECT/BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/CRONJOB=$CRON_IMAGE_TAG
+
           kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/todo-app-dep -n project
-          kubectl rollout status deployment/todo-backend-dep -n project
-          kubectl get services -n project -o wide
+
+          kubectl rollout status deployment/todo-app-dep -n $NAMESPACE
+          kubectl rollout status deployment/todo-backend-dep -n $NAMESPACE
+
+          kubectl get services -n $NAMESPACE -o wide
