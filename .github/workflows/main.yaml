@@ -1,6 +1,8 @@
 name: Release Application
 on:
   push:
+    branches:
+      - "**"
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -44,18 +46,21 @@ jobs:
           echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/todo-app:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/todo-backend:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "CRON_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/todo-generator:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BACKUP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/todo-db-backup:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Build
         run: |
           docker build --tag $APP_IMAGE_TAG the_project/todo-app
           docker build --tag $BACKEND_IMAGE_TAG the_project/todo-backend
-          docker build --tag $CRON_IMAGE_TAG the_project/bash
+          docker build --tag $CRON_IMAGE_TAG the_project/scripts/generator
+          docker build --tag $BACKUP_IMAGE_TAG the_project/scripts/backup
 
       - name: Publish
         run: |
           docker push $APP_IMAGE_TAG
           docker push $BACKEND_IMAGE_TAG
           docker push $CRON_IMAGE_TAG
+          docker push $BACKUP_IMAGE_TAG
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0

@@ -4,7 +4,7 @@ Create a cluster in GKE
 
 Run `kubectl create namespace project` to create a namespace
 
-Deploy with `kubectl apply -k .`
+Deploy with `kubectl apply -k . -n project`
 
 See IP address whit `kubectl get gateway project-gateway -n project --watch`
 

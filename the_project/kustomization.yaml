@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - manifests/backup-cronjob.yaml
   - manifests/configmap.yaml
   - manifests/cronjob.yaml
   - manifests/gateway.yaml
@@ -21,3 +22,5 @@ images:
   - name: PROJECT/DB
     newName: postgres
     newTag: "14"
+  - name: PROJECT/BACKUP
+    newName: ronaldidro/todo-db-backup
