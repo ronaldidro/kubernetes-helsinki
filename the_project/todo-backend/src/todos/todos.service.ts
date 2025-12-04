@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
@@ -7,6 +7,8 @@ import { Todo } from './entities/todo.entity';
 
 @Injectable()
 export class TodosService {
+  private readonly logger = new Logger(TodosService.name);
+
   constructor(
     @InjectRepository(Todo)
     private readonly repository: Repository<Todo>,
@@ -16,7 +18,9 @@ export class TodosService {
     const todo = this.repository.create({
       description: createTodoDto.description,
     });
-    return this.repository.save(todo);
+    const saved = await this.repository.save(todo);
+    this.logger.log(`New TODO created: ${JSON.stringify(saved)}`);
+    return saved;
   }
 
   findAll(): Promise<Todo[]> {
