@@ -39,3 +39,9 @@ spec:
               mountPath: /usr/src/app/data
             - name: config-vol
               mountPath: /usr/src/app/config
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5

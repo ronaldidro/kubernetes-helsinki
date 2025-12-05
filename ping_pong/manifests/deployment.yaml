@@ -19,3 +19,9 @@ spec:
           env:
             - name: PG_HOST
               value: "postgres-stset-0.postgres-svc"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 5

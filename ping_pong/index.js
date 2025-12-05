@@ -14,6 +14,12 @@ const pool = new Pool({
   database: "postgres",
 });
 
+let dbReady = false;
+
+async function checkConnection() {
+  await pool.query("SELECT 1;");
+}
+
 async function initDB() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS pings (
@@ -29,19 +35,51 @@ async function initDB() {
   }
 }
 
-initDB();
+function verifyDBReady(ctx, next) {
+  if (!dbReady) {
+    ctx.status = 503;
+    ctx.body = {
+      error: "Database not ready",
+    };
+    return;
+  }
+  return next();
+}
+
+(async () => {
+  try {
+    await initDB();
+    dbReady = true;
+    console.log("Database initialized.");
+  } catch (err) {
+    dbReady = false;
+    console.log("DB not ready yet.");
+  }
+})();
+
+router.get("/healthz", async (ctx) => {
+  try {
+    await checkConnection();
+    dbReady = true;
+    ctx.status = 200;
+  } catch {
+    dbReady = false;
+    ctx.status = 500;
+  }
+});
 
 router.get("/", (ctx) => {
   ctx.body = "ok";
 });
 
-router.get("/ping", async (ctx) => {
-  await pool.query("UPDATE pings SET value = value + 1 WHERE id = 1");
-  const res = await pool.query("SELECT value FROM pings WHERE id = 1");
+router.get("/ping", verifyDBReady, async (ctx) => {
+  const res = await pool.query(
+    "UPDATE pings SET value = value + 1 WHERE id = 1 RETURNING value"
+  );
   ctx.body = `pong ${res.rows[0].value}`;
 });
 
-router.get("/pings", async (ctx) => {
+router.get("/pings", verifyDBReady, async (ctx) => {
   const res = await pool.query("SELECT value FROM pings WHERE id = 1");
   ctx.body = { counter: res.rows[0].value };
 });

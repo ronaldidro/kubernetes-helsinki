@@ -1,12 +1,21 @@
 import fs from "node:fs";
 import http from "node:http";
 
-const logFile = "/usr/src/app/data/log.txt";
-const infoFile = "/usr/src/app/config/info.txt";
+const LOG_FILE = "/usr/src/app/data/log.txt";
+const INFO_FILE = "/usr/src/app/config/info.txt";
+const PING_PONG_URL = "http://ping-pong-svc:2530/pings";
 
-async function getPings() {
+function readFileSafe(path, fallback) {
   try {
-    const response = await fetch("http://ping-pong-svc:2530/pings");
+    return fs.readFileSync(path, "utf8").trim();
+  } catch {
+    return fallback;
+  }
+}
+
+async function fetchPingCount() {
+  try {
+    const response = await fetch(PING_PONG_URL);
 
     if (!response.ok) throw new Error("Service error");
 
@@ -18,36 +27,48 @@ async function getPings() {
   }
 }
 
+async function checkPingPongHealth() {
+  try {
+    const response = await fetch(PING_PONG_URL);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function handleHealthz(req, res) {
+  const isHealthy = await checkPingPongHealth();
+  res.writeHead(isHealthy ? 200 : 500);
+  res.end(isHealthy ? "ok" : "fail");
+}
+
+async function handleRoot(_, res) {
+  const logText = readFileSafe(LOG_FILE, "log.txt not found");
+  const infoText = readFileSafe(INFO_FILE, "info.txt not found");
+  const pingCount = await fetchPingCount();
+
+  const output = [
+    `file content: ${infoText}`,
+    `env variable: MESSAGE=${process.env.MESSAGE}`,
+    logText,
+    `Ping / pongs: ${pingCount}`,
+  ].join("\n");
+
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end(output);
+}
+
 const server = http.createServer(async (req, res) => {
-  if (req.url === "/") {
-    let logText = "";
-    let infoText = "";
+  switch (req.url) {
+    case "/healthz":
+      return handleHealthz(req, res);
 
-    try {
-      logText = fs.readFileSync(logFile, "utf8").trim();
-    } catch {
-      logText = "log.txt not found";
-    }
+    case "/":
+      return handleRoot(req, res);
 
-    try {
-      infoText = fs.readFileSync(infoFile, "utf8").trim();
-    } catch {
-      infoText = "info.txt not found";
-    }
-
-    const pings = await getPings();
-
-    const info = `file content: ${infoText}`;
-    const variable = `env variable: MESSAGE=${process.env.MESSAGE}`;
-    const counter = `Ping / pongs: ${pings}`;
-
-    const result = `${info}\n${variable}\n${logText}\n${counter}`;
-
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end(result);
-  } else {
-    res.writeHead(404);
-    res.end("Not found");
+    default:
+      res.writeHead(404);
+      res.end("Not found");
   }
 });
 
