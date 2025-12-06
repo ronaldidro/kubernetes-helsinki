@@ -72,7 +72,7 @@ router.get("/", (ctx) => {
   ctx.body = "ok";
 });
 
-router.get("/ping", verifyDBReady, async (ctx) => {
+router.get("/pingpong", verifyDBReady, async (ctx) => {
   const res = await pool.query(
     "UPDATE pings SET value = value + 1 WHERE id = 1 RETURNING value"
   );
