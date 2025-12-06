@@ -36,8 +36,8 @@ export class TodosService {
 
     if (!todo) return null;
 
-    if (updateTodoDto.description) {
-      todo.description = updateTodoDto.description;
+    if (updateTodoDto.done !== undefined) {
+      todo.done = updateTodoDto.done;
     }
 
     return this.repository.save(todo);

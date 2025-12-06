@@ -21,3 +21,15 @@ export async function createTodo(description) {
     throw new Error(`Failed to create todo. Status: ${response.status}`);
   }
 }
+
+export async function updateTodo(id) {
+  const response = await fetch(`${TODO_SERVICE_URL}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ done: true }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update todo. Status: ${response.status}`);
+  }
+}

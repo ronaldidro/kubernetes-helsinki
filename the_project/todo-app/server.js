@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { createTodo, getTodos } from "./lib/client.js";
+import { createTodo, getTodos, updateTodo } from "./lib/client.js";
 import { ensureImage } from "./lib/utils.js";
 
 const app = express();
@@ -10,6 +10,13 @@ const imagePath = path.join(folder, "image.jpg");
 const timestampPath = path.join(folder, "timestamp.txt");
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, _, next) => {
+  if (req.body && req.body._method) {
+    req.method = req.body._method.toUpperCase();
+  }
+  next();
+});
 
 app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
@@ -24,7 +31,10 @@ app.get("/", async (req, res) => {
     console.error("Error fetching todos:", err);
   }
 
-  res.render("index", { todos });
+  const pending = todos.filter((t) => !t.done);
+  const done = todos.filter((t) => t.done);
+
+  res.render("index", { pending, done });
 });
 
 app.get("/healthz", async (_, res) => {
@@ -50,6 +60,16 @@ app.post("/todos", async (req, res) => {
     } catch (err) {
       console.error("Error creating todo:", err);
     }
+  }
+
+  res.redirect("/");
+});
+
+app.patch("/todos/:id", async (req, res) => {
+  try {
+    await updateTodo(req.params.id);
+  } catch (err) {
+    console.error("Error updating todo:", err);
   }
 
   res.redirect("/");
