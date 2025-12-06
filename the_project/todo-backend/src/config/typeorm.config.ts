@@ -11,4 +11,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: dbConfig.database,
   entities: [Todo],
   synchronize: true,
+  manualInitialization: true,
+  retryAttempts: 0,
+  retryDelay: 0,
 };

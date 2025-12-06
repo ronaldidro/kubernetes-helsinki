@@ -27,6 +27,16 @@ app.get("/", async (req, res) => {
   res.render("index", { todos });
 });
 
+app.get("/healthz", async (_, res) => {
+  try {
+    await getTodos();
+    res.status(200).send({ status: "ok" });
+  } catch (err) {
+    console.error("Health check failed:", err.message);
+    res.status(503).send({ status: "db unavailable" });
+  }
+});
+
 app.get("/image", (req, res) => {
   res.sendFile(imagePath);
 });

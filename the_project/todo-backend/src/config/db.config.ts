@@ -38,8 +38,7 @@ export async function createDatabaseIfNotExists() {
       logger.log(`Database "${dbName}" already exists.`);
     }
   } catch (err) {
-    logger.error('Error creating the database', err);
-    process.exit(1);
+    logger.error('Error to creating database', err);
   } finally {
     await client.end();
   }
