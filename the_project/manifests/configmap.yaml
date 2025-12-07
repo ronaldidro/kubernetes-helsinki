@@ -10,3 +10,4 @@ data:
   PG_HOST: "postgres-stset-0.postgres-svc"
   PG_USER: "postgres"
   PG_PASSWORD: "postgres"
+  NATS_URL: "nats://my-nats.default.svc.cluster.local:4222"
