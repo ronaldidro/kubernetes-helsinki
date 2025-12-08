@@ -1,15 +1,15 @@
-name: Build and publish log-output
+name: Build and publish todo-app
 
 on:
   push:
     branches:
       - "**"
     paths:
-      - "log_output/**"
+      - "the_project/todo-app/**"
 
 jobs:
   build-publish:
-    name: Build, Push, Release
+    name: Build, Push, Release Todo App
     runs-on: ubuntu-latest
 
     steps:
@@ -24,19 +24,19 @@ jobs:
 
       - name: Build and publish
         run: |
-          docker build -t ronaldidro/log-output:${GITHUB_SHA} log_output/
-          docker push ronaldidro/log-output:${GITHUB_SHA}
+          docker build -t ronaldidro/todo-app:${GITHUB_SHA} the_project/todo-app/
+          docker push ronaldidro/todo-app:${GITHUB_SHA}
 
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v2
 
       - name: Use right image
         run: |
-          cd log_output/manifests
-          kustomize edit set image PROJECT/READER=ronaldidro/log-output:${GITHUB_SHA}
+          cd the_project
+          kustomize edit set image PROJECT/APP=ronaldidro/todo-app:${GITHUB_SHA}
 
-      - name: Commit kustomization.yaml to GitHub
+      - name: Commit kustomization.yaml
         uses: EndBug/add-and-commit@v9
         with:
-          add: "log_output/manifests/kustomization.yaml"
-          message: New version released ${{ github.sha }}
+          add: "the_project/kustomization.yaml"
+          message: New todo-app version released ${{ github.sha }}
