@@ -17,7 +17,7 @@ images:
   newName: ronaldidro/todo-app
 - name: PROJECT/BACKEND
   newName: ronaldidro/todo-backend
-  newTag: 6fc0532e9ba19aa78921249d8bd4bcaa29bca8e8
+  newTag: f624b5a3ebcda769248a1fde77fe80568a7e960c
 - name: PROJECT/BACKUP
   newName: ronaldidro/todo-db-backup
 - name: PROJECT/BROADCASTER
