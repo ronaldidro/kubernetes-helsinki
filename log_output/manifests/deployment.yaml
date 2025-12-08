@@ -22,12 +22,12 @@ spec:
             name: log-output-config
       containers:
         - name: log-writer
-          image: ronaldidro/log-writer
+          image: PROJECT/WRITER
           volumeMounts:
             - name: shared-log
               mountPath: /usr/src/app/data
         - name: log-reader
-          image: ronaldidro/log-output
+          image: PROJECT/READER
           env:
             - name: MESSAGE
               valueFrom:
