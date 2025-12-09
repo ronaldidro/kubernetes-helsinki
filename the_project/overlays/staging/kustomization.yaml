@@ -14,18 +14,18 @@ namePrefix: staging-
 images:
 - name: PROJECT/APP
   newName: ronaldidro/todo-app
-  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+  newTag: 66734d4842064b4ad0fb6bb16ad21f59acee0e1c
 - name: PROJECT/BACKEND
   newName: ronaldidro/todo-backend
-  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+  newTag: 66734d4842064b4ad0fb6bb16ad21f59acee0e1c
 - name: PROJECT/BACKUP
   newName: ronaldidro/todo-db-backup
 - name: PROJECT/BROADCASTER
   newName: ronaldidro/todo-broadcaster
-  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+  newTag: 66734d4842064b4ad0fb6bb16ad21f59acee0e1c
 - name: PROJECT/CRONJOB
   newName: ronaldidro/todo-generator
-  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+  newTag: 66734d4842064b4ad0fb6bb16ad21f59acee0e1c
 - name: PROJECT/DB
   newName: postgres
   newTag: "14"
