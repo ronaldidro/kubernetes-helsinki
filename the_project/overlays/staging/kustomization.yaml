@@ -9,13 +9,13 @@ namePrefix: staging-
 images:
 - name: PROJECT/APP
   newName: ronaldidro/todo-app
-  newTag: e183ab9cde8d81f12831ea2b4595851023195a69
+  newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
 - name: PROJECT/BACKEND
   newName: ronaldidro/todo-backend
-  newTag: e183ab9cde8d81f12831ea2b4595851023195a69
+  newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
 - name: PROJECT/BROADCASTER
   newName: ronaldidro/todo-broadcaster
-  newTag: e183ab9cde8d81f12831ea2b4595851023195a69
+  newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
 - name: PROJECT/CRONJOB
   newName: ronaldidro/todo-generator
-  newTag: e183ab9cde8d81f12831ea2b4595851023195a69
+  newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
