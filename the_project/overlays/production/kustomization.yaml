@@ -5,3 +5,6 @@ namespace: project-production
 
 resources:
   - ../../manifests
+  - ../../todo-app/manifests
+  - ../../todo-backend/manifests
+  - ../../todo-broadcaster/manifests
