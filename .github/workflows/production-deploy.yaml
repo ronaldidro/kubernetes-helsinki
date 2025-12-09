@@ -1,0 +1,57 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - "*"
+    paths:
+      - "the_project/**"
+
+env:
+  TAG: ${GITHUB_REF#refs/tags/}
+
+jobs:
+  production-deploy:
+    name: Build, Push and Update Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build
+        run: |
+          docker build -t ronaldidro/todo-app:$TAG the_project/todo-app/
+          docker build -t ronaldidro/todo-backend:$TAG the_project/todo-backend/
+          docker build -t ronaldidro/todo-broadcaster:$TAG the_project/todo-broadcaster/
+          docker build -t ronaldidro/todo-generator:$TAG the_project/scripts/generator/
+
+      - name: Publish
+        run: |
+          docker push ronaldidro/todo-app:$TAG
+          docker push ronaldidro/todo-backend:$TAG
+          docker push ronaldidro/todo-broadcaster:$TAG
+          docker push ronaldidro/todo-generator:$TAG
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Use right images to production
+        run: |
+          cd the_project/overlays/prod
+          kustomize edit set image PROJECT/APP=ronaldidro/todo-app:$TAG
+          kustomize edit set image PROJECT/BACKEND=ronaldidro/todo-backend:$TAG
+          kustomize edit set image PROJECT/BROADCASTER=ronaldidro/todo-broadcaster:$TAG
+          kustomize edit set image PROJECT/CRONJOB=ronaldidro/todo-generator:$TAG
+
+      - name: Commit production kustomization.yaml
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "the_project/overlays/prod/kustomization.yaml"
+          message: "New prod version release $TAG"
