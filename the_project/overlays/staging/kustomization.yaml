@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: project-staging
 
 resources:
-  - ../manifests
+  - ../../manifests
 
 patches:
   - path: broadcaster-dep.yaml

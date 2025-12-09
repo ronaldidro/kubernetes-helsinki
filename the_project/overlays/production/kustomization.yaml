@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: project-production
 
 resources:
-  - ../manifests
+  - ../../manifests
