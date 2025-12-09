@@ -4,11 +4,9 @@ on:
   push:
     tags:
       - "*"
-    paths:
-      - "the_project/**"
 
 env:
-  TAG: ${GITHUB_REF#refs/tags/}
+  TAG: ${{ github.ref_name }}
 
 jobs:
   production-deploy:
@@ -54,4 +52,4 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           add: "the_project/overlays/prod/kustomization.yaml"
-          message: "New prod version release $TAG"
+          message: "New prod version release ${{ env.TAG }}"
