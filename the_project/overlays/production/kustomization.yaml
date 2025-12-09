@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: project-production
 
 resources:
-  - ../../manifests
+  - ../../manifests/kustomization.yaml
   - ../../todo-app/manifests
   - ../../todo-backend/manifests
   - ../../todo-broadcaster/manifests
