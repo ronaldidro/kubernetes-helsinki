@@ -6,6 +6,9 @@ namespace: project-staging
 resources:
   - ../../manifests
 
+patches:
+  - path: configmap.yaml
+
 namePrefix: staging-
 
 images:
