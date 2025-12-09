@@ -1,0 +1,54 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "the_project/**"
+
+jobs:
+  staging-deploy:
+    name: Build, Push, Release Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build
+        run: |
+          docker build -t ronaldidro/todo-app:${GITHUB_SHA} the_project/todo-app/
+          docker build -t ronaldidro/todo-backend:${GITHUB_SHA} the_project/todo-backend/
+          docker build -t ronaldidro/todo-broadcaster:${GITHUB_SHA} the_project/todo-broadcaster/
+          docker build -t ronaldidro/todo-generator:${GITHUB_SHA} the_project/scripts/generator/
+
+      - name: Publish
+        run: |
+          docker push ronaldidro/todo-app:${GITHUB_SHA}
+          docker push ronaldidro/todo-backend:${GITHUB_SHA}
+          docker push ronaldidro/todo-broadcaster:${GITHUB_SHA}
+          docker push ronaldidro/todo-generator:${GITHUB_SHA}
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Use right images to staging
+        run: |
+          cd the_project/overlays/staging
+          kustomize edit set image PROJECT/APP=ronaldidro/todo-app:${GITHUB_SHA}
+          kustomize edit set image PROJECT/BACKEND=ronaldidro/todo-backend:${GITHUB_SHA}
+          kustomize edit set image PROJECT/BROADCASTER=ronaldidro/todo-broadcaster:${GITHUB_SHA}
+          kustomize edit set image PROJECT/CRONJOB=ronaldidro/todo-generator:${GITHUB_SHA}
+
+      - name: Commit staging kustomization.yaml
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "the_project/overlays/staging/kustomization.yaml"
+          message: "New staging version release ${GITHUB_SHA}"
