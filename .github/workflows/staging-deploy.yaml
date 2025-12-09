@@ -36,19 +36,29 @@ jobs:
           docker push ronaldidro/todo-broadcaster:${GITHUB_SHA}
           docker push ronaldidro/todo-generator:${GITHUB_SHA}
 
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: ronaldidro/the-project-config
+          path: configrepo
+          token: ${{ secrets.GH_PAT }}
+
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v2
 
       - name: Use right images to staging
         run: |
-          cd the_project/overlays/staging
+          cd configrepo/overlays/staging
           kustomize edit set image PROJECT/APP=ronaldidro/todo-app:${GITHUB_SHA}
           kustomize edit set image PROJECT/BACKEND=ronaldidro/todo-backend:${GITHUB_SHA}
           kustomize edit set image PROJECT/BROADCASTER=ronaldidro/todo-broadcaster:${GITHUB_SHA}
           kustomize edit set image PROJECT/CRONJOB=ronaldidro/todo-generator:${GITHUB_SHA}
 
-      - name: Commit staging kustomization.yaml
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: "the_project/overlays/staging/kustomization.yaml"
-          message: New staging version release ${{ github.sha }}
+      - name: Commit and push to config repo
+        run: |
+          cd configrepo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "New staging version release ${GITHUB_SHA}" || echo "No changes"
+          git push
