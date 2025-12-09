@@ -4,10 +4,7 @@ kind: Kustomization
 namespace: project-staging
 
 resources:
-  - ../../manifests
-  - ../../todo-app/manifests
-  - ../../todo-backend/manifests
-  - ../../todo-broadcaster/manifests
+  - ../manifests
 
 patches:
   - path: broadcaster-dep.yaml
