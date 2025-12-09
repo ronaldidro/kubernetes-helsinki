@@ -16,7 +16,12 @@ images:
     newName: ronaldidro/todo-app
   - name: PROJECT/BACKEND
     newName: ronaldidro/todo-backend
+  - name: PROJECT/BACKUP
+    newName: ronaldidro/todo-db-backup
   - name: PROJECT/BROADCASTER
     newName: ronaldidro/todo-broadcaster
   - name: PROJECT/CRONJOB
     newName: ronaldidro/todo-generator
+  - name: PROJECT/DB
+    newName: postgres
+    newTag: "14"
