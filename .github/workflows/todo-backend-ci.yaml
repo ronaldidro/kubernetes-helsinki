@@ -32,7 +32,7 @@ jobs:
 
       - name: Use right image
         run: |
-          cd the_project
+          cd the_project/manifests
           kustomize edit set image PROJECT/BACKEND=ronaldidro/todo-backend:${GITHUB_SHA}
 
       - name: Commit kustomization.yaml
