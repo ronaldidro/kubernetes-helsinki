@@ -4,17 +4,7 @@ kind: Kustomization
 namespace: project-staging
 
 resources:
-  - ../../manifests/configmap.yaml
-  - ../../manifests/cronjob.yaml
-  - ../../manifests/ingress.yaml
-  - ../../manifests/persistentvolume.yaml
-  - ../../manifests/persistentvolumeclaim.yaml
-  - ../../todo-app/manifests/deployment.yaml
-  - ../../todo-app/manifests/service.yaml
-  - ../../todo-backend/manifests/deployment.yaml
-  - ../../todo-backend/manifests/service.yaml
-  - ../../todo-backend/manifests/statefulset.yaml
-  - ../../todo-broadcaster/manifests/deployment.yaml
+  - ../../manifests
 
 patches:
   - path: broadcaster-dep.yaml
