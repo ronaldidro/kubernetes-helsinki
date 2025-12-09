@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: main
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -39,19 +37,29 @@ jobs:
           docker push ronaldidro/todo-broadcaster:$TAG
           docker push ronaldidro/todo-generator:$TAG
 
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: ronaldidro/the-project-config
+          path: configrepo
+          token: ${{ secrets.GH_PAT }}
+
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v2
 
       - name: Use right images to production
         run: |
-          cd the_project/overlays/prod
+          cd configrepo/overlays/prod
           kustomize edit set image PROJECT/APP=ronaldidro/todo-app:$TAG
           kustomize edit set image PROJECT/BACKEND=ronaldidro/todo-backend:$TAG
           kustomize edit set image PROJECT/BROADCASTER=ronaldidro/todo-broadcaster:$TAG
           kustomize edit set image PROJECT/CRONJOB=ronaldidro/todo-generator:$TAG
 
-      - name: Commit production kustomization.yaml
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: "the_project/overlays/prod/kustomization.yaml"
-          message: "New prod version release ${{ env.TAG }}"
+      - name: Commit and push to config repo
+        run: |
+          cd configrepo
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "New production version release ${env.TAG}" || echo "No changes"
+          git push

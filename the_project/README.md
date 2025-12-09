@@ -20,6 +20,8 @@ Run `kubectl create secret generic todo-secret -n project-prod --from-literal=EX
 
 ### Create ArgoCD apps
 
+Clone [the project config](https://github.com/ronaldidro/the-project-config) repository
+
 Run `kubectl apply -f overlays/staging/application.yaml` to create ArgoCD staging app
 
 Run `kubectl apply -f overlays/prod/application.yaml` to create ArgoCD production app
