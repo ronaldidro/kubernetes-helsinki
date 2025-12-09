@@ -5,3 +5,15 @@ namespace: project-production
 
 resources:
   - ../../manifests
+
+namePrefix: production-
+
+images:
+  - name: PROJECT/APP
+    newName: ronaldidro/todo-app
+  - name: PROJECT/BACKEND
+    newName: ronaldidro/todo-backend
+  - name: PROJECT/BROADCASTER
+    newName: ronaldidro/todo-broadcaster
+  - name: PROJECT/CRONJOB
+    newName: ronaldidro/todo-generator
