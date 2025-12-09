@@ -4,28 +4,28 @@ kind: Kustomization
 namespace: project-staging
 
 resources:
-  - ../../manifests
+- ../../manifests
 
 patches:
-  - path: configmap.yaml
+- path: configmap.yaml
 
 namePrefix: staging-
 
 images:
-  - name: PROJECT/APP
-    newName: ronaldidro/todo-app
-    newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
-  - name: PROJECT/BACKEND
-    newName: ronaldidro/todo-backend
-    newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
-  - name: PROJECT/BACKUP
-    newName: ronaldidro/todo-db-backup
-  - name: PROJECT/BROADCASTER
-    newName: ronaldidro/todo-broadcaster
-    newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
-  - name: PROJECT/CRONJOB
-    newName: ronaldidro/todo-generator
-    newTag: 3f7948298b5aad0ba506cd1dfdc7bf9bcb0e3f98
-  - name: PROJECT/DB
-    newName: postgres
-    newTag: "14"
+- name: PROJECT/APP
+  newName: ronaldidro/todo-app
+  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+- name: PROJECT/BACKEND
+  newName: ronaldidro/todo-backend
+  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+- name: PROJECT/BACKUP
+  newName: ronaldidro/todo-db-backup
+- name: PROJECT/BROADCASTER
+  newName: ronaldidro/todo-broadcaster
+  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+- name: PROJECT/CRONJOB
+  newName: ronaldidro/todo-generator
+  newTag: 9ba5a49607b370c717ed4afebe541e6de06bfa29
+- name: PROJECT/DB
+  newName: postgres
+  newTag: "14"
