@@ -17,4 +17,4 @@ resources:
   - ../../todo-broadcaster/manifests/deployment.yaml
 
 patches:
-  - broadcaster-dep.yaml
+  - path: broadcaster-dep.yaml
