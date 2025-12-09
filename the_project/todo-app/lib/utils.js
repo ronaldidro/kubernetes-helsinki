@@ -34,9 +34,10 @@ export async function ensureImage(imagePath, timestampPath) {
 
   console.log("Image found");
 
-  const timestamp = Number(fs.readFile(timestampPath, "utf8"));
+  const timestampStr = await fs.readFile(timestampPath, "utf8");
+  const timestamp = Number(timestampStr);
   const diffMs = Date.now() - timestamp;
-  const tenMin = 10 * 60 * 1000;
+  const tenMin = 1 * 60 * 1000; //TODO: updated after tests
 
   if (diffMs >= tenMin) {
     console.log("Time finished");
