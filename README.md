@@ -58,3 +58,7 @@
 - [4.8.](https://github.com/ronaldidro/kubernetes-helsinki/tree/4.8/the_project)
 - [4.9.](https://github.com/ronaldidro/kubernetes-helsinki/tree/4.9/the_project)
 - [4.10.](https://github.com/ronaldidro/kubernetes-helsinki/tree/4.10/the_project)
+
+### Chapter 6
+
+- [5.1.](https://github.com/ronaldidro/kubernetes-helsinki/tree/5.1/dummy_site)
