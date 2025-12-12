@@ -62,3 +62,4 @@
 ### Chapter 6
 
 - [5.1.](https://github.com/ronaldidro/kubernetes-helsinki/tree/5.1/dummy_site)
+- [5.2.](https://github.com/ronaldidro/kubernetes-helsinki/tree/5.2/istio)
