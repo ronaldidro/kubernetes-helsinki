@@ -10,6 +10,6 @@ resources:
 images:
 - name: PROJECT/READER
   newName: ronaldidro/log-output
-  newTag: 05049db2ae7dfae730912d8c4cdc14d17b46d1ce
+  newTag: 4b36d901a3d890483541e21751742c1ebfc9aab4
 - name: PROJECT/WRITER
   newName: ronaldidro/log-writer
