@@ -4,6 +4,7 @@ import http from "node:http";
 const LOG_FILE = "/usr/src/app/data/log.txt";
 const INFO_FILE = "/usr/src/app/config/info.txt";
 const PING_PONG_URL = "http://ping-pong-svc:2530/pings";
+const GREETER_URL = "http://greeter-svc:2540";
 
 function readFileSafe(path, fallback) {
   try {
@@ -12,6 +13,21 @@ function readFileSafe(path, fallback) {
     return fallback;
   }
 }
+
+async function fetchGreeting() {
+  try {
+    const response = await fetch(GREETER_URL);
+
+    if (!response.ok) throw new Error("Service error");
+
+    const data = await response.json();
+    return data.greeting ?? "unknown";
+  } catch (err) {
+    console.error("Error connecting greeter service:", err.message);
+    return "unavailable";
+  }
+}
+
 
 async function fetchPingCount() {
   try {
@@ -46,12 +62,14 @@ async function handleRoot(_, res) {
   const logText = readFileSafe(LOG_FILE, "log.txt not found");
   const infoText = readFileSafe(INFO_FILE, "info.txt not found");
   const pingCount = await fetchPingCount();
+  const greeting = await fetchGreeting();
 
   const output = [
     `file content: ${infoText}`,
     `env variable: MESSAGE=${process.env.MESSAGE}`,
     logText,
     `Ping / pongs: ${pingCount}`,
+    `greetings: ${greeting}`,
   ].join("\n");
 
   res.writeHead(200, { "Content-Type": "text/plain" });
