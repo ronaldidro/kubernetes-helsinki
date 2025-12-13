@@ -18,7 +18,7 @@ async function fetchGreeting() {
   try {
     const response = await fetch(GREETER_URL);
 
-    if (!response.ok) throw new Error("Service error");
+    if (!response.ok) throw new Error("Greeter service error");
 
     const data = await response.json();
     return data.greeting ?? "unknown";
