@@ -1,15 +1,25 @@
 ## Log output app
 
-Install ArgoCD into k3d
+Create a k3d cluster with name "ambient" and install istio
 
-Run `docker exec k3d-k3s-default-agent-0 mkdir -p /tmp/kube` to create a directory
+Run `kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/prometheus.yaml` to install prometheus addon
+
+Run `kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.21/samples/addons/kiali.yaml` to install kiali addon
+
+Run `docker exec k3d-ambient-agent-0 mkdir -p /tmp/kube` to create a volume directory
 
 Run `kubectl create namespace exercises` to create a namespace
 
-Run `kubectl port-forward svc/argocd-server -n argocd 8080:80` to publish ArgoCD UI on port 8080
+Run `kubectl label namespace exercises istio.io/dataplane-mode=ambient` to enable istio in namespace
+
+Run `kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml` to install api gateway api into cluster
+
+Deploy with `kubectl apply -k manifests`
+
+Deploy greeter with `kubectl apply -f greeter/manifests`
 
 Deploy the ping-pong app
 
-Configure app in the ArgoCD Dashboard (http://localhost:8080) and Sync
+Run `istioctl dashboard kiali` to access the kiali dashboard
 
-Now visit `http://localhost:<published_port>`
+Now visit `http://localhost:<published_port>` or send some traffic with `for i in $(seq 1 100); do curl -sSI -o /dev/null http://localhost:<published_port>; done`
