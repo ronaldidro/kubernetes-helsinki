@@ -1,0 +1,13 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ping-pong
+  namespace: exercises
+spec:
+  template:
+    spec:
+      containers:
+        - image: ronaldidro/ping-pong
+          env:
+            - name: PG_HOST
+              value: "postgres-stset-0.postgres-svc"
