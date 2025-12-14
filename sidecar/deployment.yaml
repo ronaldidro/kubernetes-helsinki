@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikipedia-dep
+  namespace: exercises
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikipedia
+  template:
+    metadata:
+      labels:
+        app: wikipedia
+    spec:
+      volumes:
+        - name: www
+          emptyDir: {}
+      initContainers:
+        - name: init-fetch-kubernetes
+          image: curlimages/curl:8.5.0
+          command:
+            - sh
+            - -c
+            - |
+              echo "[INIT] Downloading Kubernetes page..."
+              curl -L https://en.wikipedia.org/wiki/Kubernetes \
+                -o /www/index.html
+              echo "[INIT] Done"
+          volumeMounts:
+            - name: www
+              mountPath: /www
+        - name: sidecar-random-wikipedia
+          image: curlimages/curl:8.5.0
+          restartPolicy: Always
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                WAIT=$((300 + RANDOM % 600))
+                echo "[SIDECAR] Waiting $WAIT seconds..."
+                sleep $WAIT
+                echo "[SIDECAR] Downloading random Wikipedia page..."
+                curl -L https://en.wikipedia.org/wiki/Special:Random \
+                  -o /www/index.html
+              done
+          volumeMounts:
+            - name: www
+              mountPath: /www
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: www
+              mountPath: /usr/share/nginx/html
